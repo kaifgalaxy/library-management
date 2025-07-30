@@ -1,87 +1,80 @@
-# 📚 Library Management System – SQL Server Project
+# 📚 Library Management System Dashboard
 
-This is a relational database project developed in **SQL Server** to simulate a **Library Management System**. It includes the creation of a complete schema, population of tables with realistic sample data, and various stored procedures to query and manage the data efficiently.
-
----
-
-## 🚀 Features
-
-- Database schema creation using `CREATE DATABASE`, `CREATE TABLE`, and foreign key constraints.
-- Sample data insertion for:
-  - Publishers
-  - Books
-  - Library branches
-  - Borrowers
-  - Book loans
-  - Book copies
-  - Book authors
-- Stored procedures for querying:
-  - Books available at specific branches
-  - Borrowers with/without loans
-  - Due date tracking
-  - Books by specific authors
-  - Loans summary per branch
-  - Books checked out by frequent borrowers
+This project is a **Power BI dashboard** designed to visualize and analyze key insights from a **Library Management System** built with **MySQL**.
 
 ---
 
-## 🛠 Technologies Used
+## 📊 Dashboard Overview
 
-- **SQL Server**
-- **T-SQL (Transact-SQL)**
+The dashboard helps track:
 
----
-
-## 📂 Database Structure
-
-### Tables:
-
-- `tbl_publisher` – Publisher information
-- `tbl_book` – Book records linked to publishers
-- `tbl_library_branch` – Library branch details
-- `tbl_borrower` – Borrower personal details
-- `tbl_book_loans` – Tracks book checkouts and due dates
-- `tbl_book_copies` – Number of book copies available in each branch
-- `tbl_book_authors` – Author details for books
-
-### Relationships:
-
-- `tbl_book` → `tbl_publisher`
-- `tbl_book_loans` → `tbl_book`, `tbl_library_branch`, `tbl_borrower`
-- `tbl_book_copies` → `tbl_book`, `tbl_library_branch`
-- `tbl_book_authors` → `tbl_book`
+- ✅ Total Books Issued and Returned
+- 📌 Books Distribution by Genre
+- 🏬 Number of Loans per Branch
+- 👥 Active Borrowers and Loan Activity
 
 ---
 
-## 🔍 Sample Stored Procedures
+## 🛠️ Tech Stack
 
-1. `bookCopiesAtAllSharpstown` – Total copies of a book in **Sharpstown** branch.
-2. `bookCopiesAtAllBranches` – Copies of a book across all branches.
-3. `NoLoans` – Borrowers who have **no books checked out**.
-4. `LoanersInfo` – Borrower info for books due today at **Sharpstown**.
-5. `TotalLoansPerBranch` – Number of books loaned out per branch.
-6. `BooksLoanedOut` – Borrowers who checked out **more than 5 books**.
-7. `BookbyAuthorandBranch` – Book copies by **Stephen King** at **Central** branch.
+- 💻 **MySQL Workbench** – For database design and record insertion
+- 📊 **Power BI Desktop** – For data visualization and reporting
+- 📂 `.pbix` file – Contains the complete report
 
 ---
 
-## 📦 How to Run
+## 🧾 Database Structure
 
-1. Open **SQL Server Management Studio (SSMS)**.
-2. Create a new query window and paste the full script from this repository.
-3. Execute the script to:
-   - Create the database and tables
-   - Insert all sample data
-   - Create stored procedures
-4. Use `EXEC` to run any stored procedure.
+This project uses the following 4 main tables:
+
+| Table Name  | Description |
+|-------------|-------------|
+| `books`     | Stores book details (title, author, genre, publisher) |
+| `borrowers` | Contains member details (name, contact) |
+| `branches`  | List of library branches |
+| `loans`     | Records book issue/return transactions |
+
+Each table contains **100+ records**, created using SQL `INSERT` scripts.
 
 ---
 
-## 🧪 Example Queries
+## 🧩 Key Visuals in the Dashboard
 
-```sql
--- Get book copies of "The Lost Tribe" at Sharpstown
-EXEC dbo.bookCopiesAtAllSharpstown;
+1. **Books Issued & Returned**  
+   - KPIs showing number of books issued and returned
 
--- Borrowers with more than 5 books
-EXEC dbo.BooksLoanedOut;
+2. **Books by Genre**  
+   - Bar or donut chart showing number of books per genre
+
+3. **Loans per Branch**  
+   - Column chart showing loan activity per library branch
+
+4. **Borrowers Activity**  
+   - Table or slicer with active members and their loan status
+
+---
+
+## ⚙️ Setup Instructions
+
+### 🔹 Step 1: MySQL Database
+- Create the database and tables using the provided `.sql` script
+- Import 100 records per table using `INSERT INTO` statements
+
+### 🔹 Step 2: Connect Power BI to MySQL
+- Go to **Home → Get Data → MySQL**
+- Enter credentials and connect to the `libm` database
+- Load all four tables
+
+### 🔹 Step 3: Build Relationships
+- Ensure relationships are set in **Model View**, such as:
+  - `loans.book_id` → `books.book_id`
+  - `loans.borrower_id` → `borrowers.borrower_id`
+  - `loans.branch_id` → `branches.branch_id`
+
+### 🔹 Step 4: Create Visuals
+- Add KPIs, bar charts, column charts, slicers
+- Use calculated measures such as:
+  ```DAX
+  IssuedBooks = CALCULATE(COUNT(loans[loan_id]), loans[status] = "Issued")
+  ReturnedBooks = CALCULATE(COUNT(loans[loan_id]), loans[status] = "Returned")
+AUTHOR: Mr.Faiz
